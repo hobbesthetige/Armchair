@@ -1745,9 +1745,9 @@ public class Manager : ArmchairManager {
 
     private func setupNotifications() {
 #if os(iOS)
-        NotificationCenter.default().addObserver(self, selector: "appWillResignActive:",            name: NSNotification.Name.UIApplicationWillResignActive,    object: nil)
-        NotificationCenter.default().addObserver(self, selector: "applicationDidFinishLaunching:",  name: NSNotification.Name.UIApplicationDidFinishLaunching,  object: nil)
-        NotificationCenter.default().addObserver(self, selector: "applicationWillEnterForeground:", name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(Manager.appWillResignActive(_:)),            name: NSNotification.Name.UIApplicationWillResignActive,    object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(UIApplicationDelegate.applicationDidFinishLaunching(_:)),  name: NSNotification.Name.UIApplicationDidFinishLaunching,  object: nil)
+        NotificationCenter.default().addObserver(self, selector: #selector(UIApplicationDelegate.applicationWillEnterForeground(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
 #elseif os(OSX)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "appWillResignActive:",            name: NSApplicationWillResignActiveNotification,    object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationDidFinishLaunching:",  name: NSApplicationDidFinishLaunchingNotification,  object: nil)

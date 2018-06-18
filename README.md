@@ -93,7 +93,22 @@ platform :ios, '8.0'
 platform :osx, '10.10'
 use_frameworks!
 
-pod 'Armchair', '~> 0.1.1'
+pod 'Armchair', '>= 0.3'
+
+#Add the following in order to automatically set debug flags for armchair in debug builds
+post_install do |installer|
+      installer.pods_project.targets.each do |target|
+          if target.name == 'Armchair'
+              target.build_configurations.each do |config|
+                  if config.name == 'Debug'
+                      config.build_settings['OTHER_SWIFT_FLAGS'] = '-DDebug'
+                      else
+                      config.build_settings['OTHER_SWIFT_FLAGS'] = ''
+                  end
+              end
+          end
+      end
+  end
 ```
 
 Then, run the following command:
@@ -269,6 +284,14 @@ Armchair.shouldPromptIfRated() -> Bool
 Armchair.shouldPromptIfRated(shouldPromptIfRated: Bool)
 ```
 
+The `useStoreKitReviewPrompt` configuration determines wether or not to try showing the SKStoreReviewController's requestReview() prompt instead of the default prompt. This setting has some effects only on iOS version >= 10.3. It's default value is `false`.
+```swift
+// GETTER
+Armchair.useStoreKitReviewPrompt() -> Bool
+// SETTER
+Armchair.useStoreKitReviewPrompt(useStoreKitReviewPrompt: Bool)
+```
+
 The `useMainAppBundleForLocalizations` configuration is a way to tell Armchair that you are providing your own translations for the review prompt popup strings. This may be because you are just customizing them, or that you have set your own text for the popup. If set to `true`, the main bundle will always be used to load localized strings. You have to include the translations either in a file called `ArmchairLocalizable.strings` or the standard `Localizable.strings`. If set to `false` Armchair will look in its own translation bundle for the translating strings. It's default value is `false`.
 
 ```swift
@@ -327,6 +350,15 @@ The `usesAnimation` configuration determines whether or not Armchair uses animat
 Armchair.usesAnimation() -> Bool
 // SETTER
 Armchair.usesAnimation(usesAnimation: Bool)
+```
+
+The `tintColor` configuration specifies a tint color that is applied to UIAlertController when `usesAlertController` is true. Its default value is `nil`, which means that tint color is not customized.
+
+```swift
+// GETTER
+Armchair.tintColor() -> UIColor?
+// SETTER
+Armchair.tintColor(tintColor: UIColor?)
 ```
 
 The `usesAlertController` configuration determines whether or not Armchair uses a UIAlertController when presenting an alert on iOS 8. By default, we do not use it because the reordering of buttons is not possible in the alert controller as of iOS 8.0. It's default value is `false`. Changing this value does not affect iOS 7 at all.
